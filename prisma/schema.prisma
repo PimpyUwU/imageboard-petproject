@@ -28,14 +28,15 @@ model Boards {
 }
 
 model Post {
-  id           Int            @id @default(autoincrement())
-  title        String
-  text         String
-  is_deleted   Boolean        @default(false)
-  is_OP        Boolean        @default(false)
-  deleted_post Deleted_posts?
-  board_id     Int
-  board        Boards         @relation(fields: [board_id], references: [id])
+  id            Int            @id @default(autoincrement())
+  title         String
+  text          String
+  creation_time DateTime       @default(now())
+  is_deleted    Boolean        @default(false)
+  is_OP         Boolean        @default(false)
+  deleted_post  Deleted_posts?
+  board_id      Int
+  board         Boards         @relation(fields: [board_id], references: [id])
 }
 
 model Deleted_posts {
