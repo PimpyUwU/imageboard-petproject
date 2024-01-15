@@ -3,5 +3,19 @@
   "version": "1.0.0",
   "description": "writing it to practice",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "watch": "tsc -w",
+    "dev": "nodemon --inspect ./dist/index.js"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.1"
+  },
+  "repository": "https://github.com/PimpyUwU/imageboard-petproject.git",
+  "author": "PimpyUwU <pimpy.owo@gmail.com>",
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "prisma": "^5.8.0",
+    "typescript": "^5.3.3"
+  }
 }
