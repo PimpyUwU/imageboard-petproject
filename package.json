@@ -1,0 +1,7 @@
+{
+  "name": "imageboard_pet",
+  "version": "1.0.0",
+  "description": "writing it to practice",
+  "main": "index.js",
+  "license": "MIT"
+}
