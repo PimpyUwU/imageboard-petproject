@@ -9,6 +9,7 @@
     "dev": "nodemon --inspect ./dist/index.js"
   },
   "dependencies": {
+    "@prisma/client": "^5.8.1",
     "@types/node": "^20.11.1"
   },
   "repository": "https://github.com/PimpyUwU/imageboard-petproject.git",

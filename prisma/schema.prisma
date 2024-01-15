@@ -9,3 +9,43 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            Int             @id @default(autoincrement())
+  nickname      String
+  email         String          @unique
+  password      String
+  role          Role
+  Deleted_posts Deleted_posts[]
+}
+
+model Boards {
+  id          Int    @id @default(autoincrement())
+  tag         String
+  name        String
+  description String
+  posts       Post[]
+}
+
+model Post {
+  id           Int            @id @default(autoincrement())
+  title        String
+  text         String
+  is_deleted   Boolean        @default(false)
+  is_OP        Boolean        @default(false)
+  deleted_post Deleted_posts?
+  board_id     Int
+  board        Boards         @relation(fields: [board_id], references: [id])
+}
+
+model Deleted_posts {
+  post_id  Int  @id
+  admin_id Int
+  user     User @relation(fields: [admin_id], references: [id])
+  post     Post @relation(fields: [post_id], references: [id])
+}
+
+enum Role {
+  ADMIN
+  SUPERADMIN
+}
