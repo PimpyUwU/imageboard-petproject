@@ -1,12 +1,17 @@
-import {BoardsListViewModel} from "../../types/models/BoardsListViewModel";
-import {BoardViewModel} from "../../types/models/BoardViewModel";
+import {PrismaClient} from '@prisma/client'
+import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
+
+const prisma: PrismaClient = new PrismaClient()
 
 export const BoardsRepository = {
-    GetAllBoards(): BoardsListViewModel {
-
+    async GetAllBoards() : Promise<BoardORMModel[] | null> {
+        return prisma.boards.findMany();
     },
 
-    GetBoardByTag(tag: string): BoardViewModel {
 
+    async GetBoardByTag(tag: string) : Promise<BoardORMModel | null> {
+        return prisma.boards.findFirst({
+            where : {tag: tag}
+        })
     }
 }
