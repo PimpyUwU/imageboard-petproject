@@ -1,9 +1,17 @@
-import express from "express";
+import express, {Response, Request} from "express";
+import {RequestWithURIParam} from "../../types/RequestTypes";
+import {GetBoardURIModel} from "../../types/models/GetBoardURIModel";
+import {BoardViewModel} from "../../types/models/BoardViewModel";
 
-export const GetUserRouter = () => {
+export const GetBoardsRouter = () => {
     const router = express.Router()
 
-    router.get("/", (req, res) => {
+    router.get("/", (req: Request,  res: Response) => {
+
+    })
+
+    router.get("/:tag", (req : RequestWithURIParam<GetBoardURIModel>,
+                         res : Response<BoardViewModel> ) => {
 
     })
 }
