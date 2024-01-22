@@ -28,7 +28,8 @@ export const BoardsService = {
         else return {
             tag : board.tag,
             name: board.name,
-            description : board.description
+            description : board.description,
+            posts : board.posts
         }
     }
 }

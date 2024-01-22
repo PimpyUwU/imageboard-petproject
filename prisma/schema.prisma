@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -11,12 +12,13 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  nickname      String
-  email         String          @unique
-  password      String
-  role          Role
-  Deleted_posts Deleted_posts[]
+  id              Int               @id @default(autoincrement())
+  nickname        String
+  email           String            @unique
+  password        String
+  role            Role
+  Deleted_posts   Deleted_posts[]
+  Deleted_replyes Deleted_replyes[]
 }
 
 model Boards {
@@ -33,10 +35,21 @@ model Post {
   text          String
   creation_time DateTime       @default(now())
   is_deleted    Boolean        @default(false)
-  is_OP         Boolean        @default(false)
   deleted_post  Deleted_posts?
   board_id      Int
+  reply         Reply[]
   board         Boards         @relation(fields: [board_id], references: [id])
+}
+
+model Reply {
+  id              Int              @id @default(autoincrement())
+  title           String
+  text            String
+  creation_time   DateTime         @default(now())
+  is_deleted      Boolean          @default(false)
+  post_id         Int
+  post            Post             @relation(fields: [post_id], references: [id])
+  Deleted_replyes Deleted_replyes?
 }
 
 model Deleted_posts {
@@ -44,6 +57,13 @@ model Deleted_posts {
   admin_id Int
   user     User @relation(fields: [admin_id], references: [id])
   post     Post @relation(fields: [post_id], references: [id])
+}
+
+model Deleted_replyes {
+  reply_id Int   @id
+  admin_id Int
+  user     User  @relation(fields: [admin_id], references: [id])
+  reply    Reply @relation(fields: [reply_id], references: [id])
 }
 
 enum Role {
