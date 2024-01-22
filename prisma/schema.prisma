@@ -24,15 +24,15 @@ model User {
 model Boards {
   id          Int    @id @default(autoincrement())
   tag         String
-  name        String
-  description String
+  name        String @db.VarChar(50)
+  description String @db.Text
   posts       Post[]
 }
 
 model Post {
   id            Int            @id @default(autoincrement())
-  title         String
-  text          String
+  title         String         @db.VarChar(50)
+  text          String         @db.Text
   creation_time DateTime       @default(now())
   is_deleted    Boolean        @default(false)
   deleted_post  Deleted_posts?
@@ -43,8 +43,8 @@ model Post {
 
 model Reply {
   id              Int              @id @default(autoincrement())
-  title           String
-  text            String
+  title           String           @db.VarChar(50)
+  text            String           @db.Text
   creation_time   DateTime         @default(now())
   is_deleted      Boolean          @default(false)
   reply_id        Int?
