@@ -51,5 +51,9 @@ export const BoardsService = {
                         }))
                 }))
         }
+    },
+
+    async AddNewPostToBoard(tag: string, title: string, text: string){
+
     }
 }
