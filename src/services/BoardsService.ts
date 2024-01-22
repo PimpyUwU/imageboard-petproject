@@ -1,6 +1,6 @@
 import {BoardsRepository} from "../repositories/BoardsRepository";
-import {BoardViewModel} from "../../types/models/BoardViewModel";
-import {BoardsListViewModel} from "../../types/models/BoardsListViewModel";
+import {BoardViewModel} from "../../types/models/ViewModels/BoardViewModel";
+import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewModel";
 import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
 
 export const BoardsService = {
@@ -25,11 +25,31 @@ export const BoardsService = {
         if(!board){
             return null
         }
-        else return {
-            tag : board.tag,
+
+        //mapping board from BoardORMModel to BoardViewModel, filtering all deleted posts
+        //and replies, mapping them
+        return {
+            tag: board.tag,
             name: board.name,
-            description : board.description,
-            posts : board.posts
+            description: board.description,
+            posts: board.posts
+                .filter(post => !post.is_deleted)
+                .map(post => ({
+                    id: post.id,
+                    title: post.title,
+                    text: post.text,
+                    creation_time: post.creation_time,
+                    reply: post.reply
+                        .filter(reply => !reply.is_deleted)
+                        .map(reply => ({
+                            id: reply.id,
+                            title: reply.title,
+                            text: reply.text,
+                            creation_time: reply.creation_time,
+                            reply_id: reply.reply_id,
+                            post_id: reply.post_id
+                        }))
+                }))
         }
     }
 }

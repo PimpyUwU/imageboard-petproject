@@ -1,8 +1,8 @@
 import express, {Response, Request} from "express";
 import {RequestWithURIParam} from "../../types/RequestTypes";
 import {GetBoardURIModel} from "../../types/models/GetBoardURIModel";
-import {BoardViewModel} from "../../types/models/BoardViewModel";
-import {BoardsListViewModel} from "../../types/models/BoardsListViewModel";
+import {BoardViewModel} from "../../types/models/ViewModels/BoardViewModel";
+import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewModel";
 import {BoardsService} from "../services/BoardsService";
 import HTTP_CODES from "../HTTP_CODES";
 

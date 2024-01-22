@@ -4,5 +4,6 @@ export type ReplyORMModel = {
     text: string,
     creation_time: Date,
     is_deleted: boolean,
+    reply_id : number,
     post_id: number,
 }

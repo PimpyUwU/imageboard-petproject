@@ -47,6 +47,9 @@ model Reply {
   text            String
   creation_time   DateTime         @default(now())
   is_deleted      Boolean          @default(false)
+  reply_id        Int?
+  reply_to        Reply?           @relation("ReplyToReply", fields: [reply_id], references: [id])
+  replies         Reply[]          @relation("ReplyToReply")
   post_id         Int
   post            Post             @relation(fields: [post_id], references: [id])
   Deleted_replyes Deleted_replyes?
