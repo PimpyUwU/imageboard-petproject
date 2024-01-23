@@ -42,6 +42,7 @@ export const GetBoardsRouter = () => {
         const postTitle : string = req.body.title
         const postText : string = req.body.text
 
+        BoardsService.AddPost(boardTag, postTitle, postText)
 
     })
 

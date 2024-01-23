@@ -53,7 +53,11 @@ export const BoardsService = {
         }
     },
 
-    async AddNewPostToBoard(tag: string, title: string, text: string){
+    async AddPost(boardTag: string, postTitle: string, postText: string){
+        if(!await BoardsRepository.CheckIfBoardExists(boardTag)) {
+            return null
+        }
 
+        await BoardsRepository.AddPost(boardTag, postTitle, postText)
     }
 }

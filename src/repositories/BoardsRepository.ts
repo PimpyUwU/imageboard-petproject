@@ -1,5 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
+import {PostORMModel} from "../../types/models/ORM/PostORMModel";
+import {create} from "node:domain";
 
 const prisma: PrismaClient = new PrismaClient()
 
@@ -52,5 +54,39 @@ export const BoardsRepository = {
                 }
             }
         })
+    },
+
+    async CheckIfBoardExists(tag : string) : Promise<boolean> {
+        return !!prisma.boards.findFirst({
+            where: {
+                tag: tag
+            }
+        })
+    },
+
+    async AddPost(boardTag : string, postTitle : string, postText : string) : Promise<PostORMModel | null> {
+        let boardId: number | null = null;
+
+        const board = await prisma.boards.findFirst({
+            where: {
+                tag: boardTag
+            },
+            select: {
+                id: true
+            }
+        });
+
+        if (board) {
+            boardId = board.id;
+        }
+        else return null
+
+        prisma.post.create({
+
+        })
+
+
+
+
     }
 }
