@@ -55,5 +55,5 @@ export const GetBoardsRouter = () => {
 
     })
 
-    return router
+    return router;
 }

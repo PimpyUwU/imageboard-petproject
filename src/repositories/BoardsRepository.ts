@@ -73,7 +73,7 @@ export const BoardsRepository = {
             include: {
                 reply: true
             }
-        });
+        })
     }
 
 }

@@ -55,7 +55,7 @@ export const BoardsService = {
     },
 
     async AddPost(boardTag: string, postTitle: string, postText: string) : Promise<PostViewModel | null>{
-        if(!await BoardsRepository.CheckIfBoardExists(boardTag)) {
+        if(!await BoardsRepository.CheckIfBoardExists(boardTag) || !postTitle || !postText) {
             return null
         }
 
