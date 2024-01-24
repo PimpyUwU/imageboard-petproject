@@ -2,6 +2,7 @@ import {BoardsRepository} from "../repositories/BoardsRepository";
 import {BoardViewModel} from "../../types/models/ViewModels/BoardViewModel";
 import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewModel";
 import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
+import {PostViewModel} from "../../types/models/ViewModels/PostViewModel";
 
 export const BoardsService = {
     async GetAllBoards() : Promise<BoardsListViewModel[] | null> {
@@ -53,11 +54,23 @@ export const BoardsService = {
         }
     },
 
-    async AddPost(boardTag: string, postTitle: string, postText: string){
+    async AddPost(boardTag: string, postTitle: string, postText: string) : Promise<PostViewModel | null>{
         if(!await BoardsRepository.CheckIfBoardExists(boardTag)) {
             return null
         }
 
-        await BoardsRepository.AddPost(boardTag, postTitle, postText)
+        const createdPost : PostViewModel | null = await BoardsRepository.AddPost(boardTag, postTitle, postText)
+
+        if (!createdPost){
+            return null
+        }
+
+        return {
+            id : createdPost.id,
+            title : createdPost.title,
+            text : createdPost.text,
+            creation_time : createdPost.creation_time,
+            reply : createdPost.reply
+        }
     }
 }

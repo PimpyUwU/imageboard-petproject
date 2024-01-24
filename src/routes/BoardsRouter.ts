@@ -6,6 +6,7 @@ import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewM
 import {BoardsService} from "../services/BoardsService";
 import HTTP_CODES from "../HTTP_CODES";
 import {CreatePostModel} from "../../types/models/RequestModels/CreatePostModel";
+import {PostViewModel} from "../../types/models/ViewModels/PostViewModel";
 
 export const GetBoardsRouter = () => {
     const router = express.Router()
@@ -19,7 +20,7 @@ export const GetBoardsRouter = () => {
             res.status(HTTP_CODES.NO_CONTENT_204).send()
         }
         else {
-            res.status(HTTP_CODES.OK_200).send(result)
+            res.status(HTTP_CODES.OK_200).json(result)
         }
     })
 
@@ -32,17 +33,25 @@ export const GetBoardsRouter = () => {
             res.status(HTTP_CODES.NO_CONTENT_204).send()
         }
         else{
-            res.status(HTTP_CODES.OK_200).send(result)
+            res.status(HTTP_CODES.OK_200).json(result)
         }
     })
 
     //Create new Post for board by tag
-    router.post("/:tag", async (req : RequestWithURIParamsAndBody<GetBoardURIModel, CreatePostModel>)=>{
+    router.post("/:tag", async (req : RequestWithURIParamsAndBody<GetBoardURIModel, CreatePostModel>,
+                                res : Response<PostViewModel> )=>{
         const boardTag : string = req.params.tag
         const postTitle : string = req.body.title
         const postText : string = req.body.text
 
-        BoardsService.AddPost(boardTag, postTitle, postText)
+        const createdPost : PostViewModel | null = await BoardsService.AddPost(boardTag, postTitle, postText)
+
+        if (!createdPost){
+            res.status(HTTP_CODES.BAD_REQUEST_400).send()
+        }
+        else{
+            res.status(HTTP_CODES.CREATED_201).json(createdPost)
+        }
 
     })
 
