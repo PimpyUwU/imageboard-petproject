@@ -1,7 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
 import {PostORMModel} from "../../types/models/ORM/PostORMModel";
-import {create} from "node:domain";
+import {CreatePostORMModel} from "../../types/models/ORM/CreatePostORMModel";
 
 const prisma: PrismaClient = new PrismaClient()
 
@@ -9,19 +9,9 @@ export const BoardsRepository = {
     async GetAllBoards() : Promise<BoardORMModel[] | null> {
         return prisma.boards.findMany(
             {
-                select : {
-                    id : true,
-                    tag: true,
-                    name : true,
-                    description : true,
+                include : {
                     posts : {
-                        select : {
-                            id : true,
-                            title : true,
-                            text : true,
-                            creation_time : true,
-                            is_deleted : true,
-                            board_id : true,
+                        include : {
                             reply : true
                         }
                     }
@@ -36,19 +26,9 @@ export const BoardsRepository = {
             where : {
                 tag: tag
             },
-            select : {
-                id : true,
-                tag: true,
-                name : true,
-                description : true,
+            include : {
                 posts : {
-                    select : {
-                        id : true,
-                        title : true,
-                        text : true,
-                        creation_time : true,
-                        is_deleted : true,
-                        board_id : true,
+                    include : {
                         reply : true
                     }
                 }
@@ -64,8 +44,8 @@ export const BoardsRepository = {
         })
     },
 
-    async AddPost(boardTag : string, postTitle : string, postText : string) : Promise<PostORMModel | null> {
-        let boardId: number | null = null;
+    async AddPost(boardTag: string, post_title: string, post_text: string): Promise<PostORMModel | null> {
+        let board_id: number | null = null;
 
         const board = await prisma.boards.findFirst({
             where: {
@@ -76,17 +56,24 @@ export const BoardsRepository = {
             }
         });
 
-        if (board) {
-            boardId = board.id;
+        if (!board) {
+            return null;
+        } else {
+            board_id = board.id;
         }
-        else return null
 
-        prisma.post.create({
+        const postData: CreatePostORMModel = {
+            title: post_title,
+            text: post_text,
+            board_id: board_id
+        };
 
-        })
-
-
-
-
+        return prisma.post.create({
+            data: postData,
+            include: {
+                reply: true
+            }
+        });
     }
+
 }
