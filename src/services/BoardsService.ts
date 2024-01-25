@@ -6,6 +6,10 @@ import {PostViewModel} from "../../types/models/Output/ViewModels/PostViewModel"
 import {PostORMModelOut} from "../../types/models/Output/ORM/PostORMModelOut";
 import {PostServiceModelIn} from "../../types/models/Input/ServiceModels/PostServiceModelIn";
 import {PostORMModelIn} from "../../types/models/Input/ORM/PostORMModelIn";
+import {ReplyServiceModelin} from "../../types/models/Input/ServiceModels/ReplyServiceModelIn";
+import {ReplyViewModel} from "../../types/models/Output/ViewModels/ReplyViewModel";
+import {ReplyORMModelin} from "../../types/models/Input/ORM/ReplyORMModelin";
+import {ReplyORMModelOut} from "../../types/models/Output/ORM/ReplyORMModelOut";
 
 export const BoardsService = {
     async GetAllBoards() : Promise<BoardsListViewModel[] | null> {
@@ -102,5 +106,29 @@ export const BoardsService = {
         }
     },
 
-    async AddReplyToPost(){}
+    async AddReplyToPost(reply : ReplyServiceModelin) : Promise<ReplyViewModel | null>{
+        const replyData : ReplyORMModelin = {
+            replyTitle : reply.replyTitle,
+            replyText : reply.replyText,
+            replyId : reply.replyTo,
+            boardTag : reply.boardTag,
+            postId : reply.postId
+        }
+
+        const createdReply : ReplyORMModelOut | null =  await BoardsRepository.AddReplyToPost(replyData)
+
+        if(!createdReply){
+            return null
+        }
+
+        //mapping ReplyORMModelOut to ReplyViewModel
+        return {
+            id : createdReply.id,
+            title : createdReply.title,
+            text : createdReply.text,
+            creation_time : createdReply.creation_time,
+            reply_id : createdReply.reply_id,
+            post_id : createdReply.post_id
+        }
+    }
 }

@@ -80,6 +80,7 @@ export const GetBoardsRouter = () => {
         }
     })
 
+    //Add reply to post by boardTag and postID
     router.post("/:boardTag/:postId", async (req : RequestWithURIParamsAndBody<GetPostURIModel, CreateReplyBodyModel>,
                                              res : Response<ReplyViewModel>) => {
         const replyData : ReplyServiceModelin = {
@@ -88,9 +89,16 @@ export const GetBoardsRouter = () => {
             replyTo: req.body.reply_id ? +req.body.reply_id : null,
             boardTag: req.params.boardTag,
             postId: +req.params.postID
+        };
+
+        const reply : ReplyViewModel | null = await BoardsService.AddReplyToPost(replyData)
+
+        if(!reply) {
+            res.status(HTTP_CODES.BAD_REQUEST_400).send()
         }
-
-
+        else{
+            res.status(HTTP_CODES.CREATED_201).json(reply)
+        }
     })
 
     return router;

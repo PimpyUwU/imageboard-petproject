@@ -2,6 +2,8 @@ import {PrismaClient} from '@prisma/client'
 import {BoardORMModeOut} from "../../types/models/Output/ORM/BoardORMModeOut";
 import {PostORMModelOut} from "../../types/models/Output/ORM/PostORMModelOut";
 import {PostORMModelIn} from "../../types/models/Input/ORM/PostORMModelIn";
+import {ReplyORMModelin} from "../../types/models/Input/ORM/ReplyORMModelin";
+import {ReplyORMModelOut} from "../../types/models/Output/ORM/ReplyORMModelOut";
 
 const prisma: PrismaClient = new PrismaClient()
 
@@ -85,6 +87,17 @@ export const BoardsRepository = {
             },
             include: {
                 reply: true
+            }
+        });
+    },
+
+    async AddReplyToPost(reply : ReplyORMModelin) : Promise<ReplyORMModelOut | null> {
+        return prisma.reply.create({
+            data : {
+                title : reply.replyTitle,
+                text : reply.replyText,
+                reply_id : reply.replyId,
+                post_id : reply.postId
             }
         });
     }

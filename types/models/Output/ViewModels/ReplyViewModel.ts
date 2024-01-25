@@ -3,6 +3,6 @@ export type ReplyViewModel = {
     title : string,
     text : string,
     creation_time : Date,
-    reply_id : number,
+    reply_id : number | null,
     post_id : number
 }
