@@ -68,7 +68,7 @@ export const GetBoardsRouter = () => {
     router.get("/:boardTag/:postId", async (req : RequestWithURIParam<GetPostURIModel>,
                                             res : Response<PostViewModel>)=> {
         const boardTag : string = req.params.boardTag
-        const postID : number = +req.params.postID
+        const postID : number = +req.params.postId
 
         const post : PostViewModel | null = await BoardsService.GetPost(boardTag, postID)
 
@@ -78,7 +78,7 @@ export const GetBoardsRouter = () => {
         else{
             res.status(HTTP_CODES.OK_200).json(post)
         }
-    })
+    });
 
     //Add reply to post by boardTag and postID
     router.post("/:boardTag/:postId", async (req : RequestWithURIParamsAndBody<GetPostURIModel, CreateReplyBodyModel>,
@@ -88,7 +88,7 @@ export const GetBoardsRouter = () => {
             replyText: req.body.text,
             replyTo: req.body.reply_id ? +req.body.reply_id : null,
             boardTag: req.params.boardTag,
-            postId: +req.params.postID
+            postId: +req.params.postId
         };
 
         const reply : ReplyViewModel | null = await BoardsService.AddReplyToPost(replyData)

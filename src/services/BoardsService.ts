@@ -90,20 +90,23 @@ export const BoardsService = {
     },
 
     async GetPost(boardTag : string, postId : number) : Promise<PostViewModel | null>{
-        const foundPost : PostORMModelOut | null = await BoardsRepository.GetPost(boardTag, postId);
+        if(postId && boardTag){
+            const foundPost : PostORMModelOut | null = await BoardsRepository.GetPost(boardTag, postId);
 
-        if (!foundPost){
-            return null
-        }
+            if (!foundPost){
+                return null
+            }
 
-        //Mapping post ORM model to view model
-        return {
-            id : foundPost.id,
-            title : foundPost.title,
-            text : foundPost.text,
-            creation_time : foundPost.creation_time,
-            reply : foundPost.reply
+            //Mapping post ORM model to view model
+            return {
+                id : foundPost.id,
+                title : foundPost.title,
+                text : foundPost.text,
+                creation_time : foundPost.creation_time,
+                reply : foundPost.reply
+            }
         }
+        return null
     },
 
     async AddReplyToPost(reply : ReplyServiceModelin) : Promise<ReplyViewModel | null>{
