@@ -1,13 +1,17 @@
 import express, {Response, Request} from "express";
 import {RequestWithURIParam, RequestWithURIParamsAndBody} from "../../types/RequestTypes";
-import {GetBoardURIModel} from "../../types/models/RequestModels/GetBoardURIModel";
-import {BoardViewModel} from "../../types/models/ViewModels/BoardViewModel";
-import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewModel";
+import {GetBoardURIModel} from "../../types/models/Input/RequestModels/GetBoardURIModel";
+import {BoardViewModel} from "../../types/models/Output/ViewModels/BoardViewModel";
+import {BoardsListViewModel} from "../../types/models/Output/ViewModels/BoardsListViewModel";
 import {BoardsService} from "../services/BoardsService";
 import HTTP_CODES from "../HTTP_CODES";
-import {CreatePostModel} from "../../types/models/RequestModels/CreatePostModel";
-import {PostViewModel} from "../../types/models/ViewModels/PostViewModel";
-import {GetPostURIModel} from "../../types/models/RequestModels/GetPostURIModel";
+import {CreatePostBodyModel} from "../../types/models/Input/RequestModels/CreatePostBodyModel";
+import {PostViewModel} from "../../types/models/Output/ViewModels/PostViewModel";
+import {GetPostURIModel} from "../../types/models/Input/RequestModels/GetPostURIModel";
+import {CreateReplyBodyModel} from "../../types/models/Input/RequestModels/CreateReplyBodyModel";
+import {ReplyViewModel} from "../../types/models/Output/ViewModels/ReplyViewModel";
+import {PostServiceModelIn} from "../../types/models/Input/ServiceModels/PostServiceModelIn";
+import {ReplyServiceModelin} from "../../types/models/Input/ServiceModels/ReplyServiceModelIn";
 
 export const GetBoardsRouter = () => {
     const router = express.Router()
@@ -41,13 +45,15 @@ export const GetBoardsRouter = () => {
     })
 
     //Create new Post for board by tag
-    router.post("/:boardTag", async (req : RequestWithURIParamsAndBody<GetBoardURIModel, CreatePostModel>,
+    router.post("/:boardTag", async (req : RequestWithURIParamsAndBody<GetBoardURIModel, CreatePostBodyModel>,
                                 res : Response<PostViewModel> )=>{
-        const boardTag : string = req.params.boardTag
-        const postTitle : string = req.body.title
-        const postText : string = req.body.text
+        const postData : PostServiceModelIn = {
+            boardTag : req.params.boardTag,
+            postTitle : req.body.title,
+            postText : req.body.text
+        }
 
-        const createdPost : PostViewModel | null = await BoardsService.AddPost(boardTag, postTitle, postText)
+        const createdPost : PostViewModel | null = await BoardsService.AddPost(postData)
 
         if (!createdPost){
             res.status(HTTP_CODES.BAD_REQUEST_400).send()
@@ -61,7 +67,7 @@ export const GetBoardsRouter = () => {
     //Get post and all it's replies from concrete board
     router.get("/:boardTag/:postId", async (req : RequestWithURIParam<GetPostURIModel>,
                                             res : Response<PostViewModel>)=> {
-        const boardTag : string = req.params.tag
+        const boardTag : string = req.params.boardTag
         const postID : number = +req.params.postID
 
         const post : PostViewModel | null = await BoardsService.GetPost(boardTag, postID)
@@ -74,7 +80,18 @@ export const GetBoardsRouter = () => {
         }
     })
 
-    router.post("", )
+    router.post("/:boardTag/:postId", async (req : RequestWithURIParamsAndBody<GetPostURIModel, CreateReplyBodyModel>,
+                                             res : Response<ReplyViewModel>) => {
+        const replyData : ReplyServiceModelin = {
+            replyTitle: req.body.title,
+            replyText: req.body.text,
+            replyTo: req.body.reply_id ? +req.body.reply_id : null,
+            boardTag: req.params.boardTag,
+            postId: +req.params.postID
+        }
+
+
+    })
 
     return router;
 }

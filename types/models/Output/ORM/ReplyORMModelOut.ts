@@ -1,4 +1,4 @@
-export type ReplyORMModel = {
+export type ReplyORMModelOut = {
     id: number,
     title: string,
     text: string,

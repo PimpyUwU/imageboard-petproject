@@ -1,4 +1,4 @@
 export type GetPostURIModel = {
-    tag : string,
+    boardTag : string,
     postID : string
 }

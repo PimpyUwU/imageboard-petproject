@@ -1,4 +1,4 @@
-export type CreatePostModel = {
+export type CreatePostBodyModel = {
     title : string,
     text : string,
 }

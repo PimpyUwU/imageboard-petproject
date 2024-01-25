@@ -1,11 +1,11 @@
-import {ReplyORMModel} from "./ReplyORMModel";
+import {ReplyORMModelOut} from "./ReplyORMModelOut";
 
-export type PostORMModel = {
+export type PostORMModelOut = {
     id: number;
     title: string;
     text: string;
     creation_time: Date;
     is_deleted: boolean;
     board_id: number;
-    reply : ReplyORMModel[]
+    reply : ReplyORMModelOut[]
 }

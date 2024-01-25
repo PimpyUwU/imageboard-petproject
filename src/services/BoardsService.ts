@@ -1,13 +1,15 @@
 import {BoardsRepository} from "../repositories/BoardsRepository";
-import {BoardViewModel} from "../../types/models/ViewModels/BoardViewModel";
-import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewModel";
-import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
-import {PostViewModel} from "../../types/models/ViewModels/PostViewModel";
-import {PostORMModel} from "../../types/models/ORM/PostORMModel";
+import {BoardViewModel} from "../../types/models/Output/ViewModels/BoardViewModel";
+import {BoardsListViewModel} from "../../types/models/Output/ViewModels/BoardsListViewModel";
+import {BoardORMModeOut} from "../../types/models/Output/ORM/BoardORMModeOut";
+import {PostViewModel} from "../../types/models/Output/ViewModels/PostViewModel";
+import {PostORMModelOut} from "../../types/models/Output/ORM/PostORMModelOut";
+import {PostServiceModelIn} from "../../types/models/Input/ServiceModels/PostServiceModelIn";
+import {PostORMModelIn} from "../../types/models/Input/ORM/PostORMModelIn";
 
 export const BoardsService = {
     async GetAllBoards() : Promise<BoardsListViewModel[] | null> {
-        const boards : BoardORMModel[] | null = await BoardsRepository.GetAllBoards()
+        const boards : BoardORMModeOut[] | null = await BoardsRepository.GetAllBoards()
 
         if(!boards || boards.length == 0){
             return null
@@ -22,13 +24,13 @@ export const BoardsService = {
     },
 
     async GetBoardByTag(tag : string) : Promise<BoardViewModel | null>{
-        const board : BoardORMModel | null = await BoardsRepository.GetBoardByTag(tag)
+        const board : BoardORMModeOut | null = await BoardsRepository.GetBoardByTag(tag)
 
         if(!board){
             return null
         }
 
-        //mapping board from BoardORMModel to BoardViewModel, filtering all deleted posts
+        //mapping board from BoardORMModeOut to BoardViewModel, filtering all deleted posts
         //and replies, mapping them
         return {
             tag: board.tag,
@@ -55,18 +57,25 @@ export const BoardsService = {
         }
     },
 
-    async AddPost(boardTag: string, postTitle: string, postText: string) : Promise<PostViewModel | null>{
-        if(!await BoardsRepository.CheckIfBoardExists(boardTag) || !postTitle || !postText) {
+    async AddPost(postData : PostServiceModelIn) : Promise<PostViewModel | null>{
+        if(!await BoardsRepository.CheckIfBoardExists(postData.boardTag) || !postData.postTitle || !postData.postText) {
             return null
         }
 
-        const createdPost : PostORMModel | null = await BoardsRepository.AddPost(boardTag, postTitle, postText)
+        //map postData from PostServiceModel to PostORMModel (input)
+        const post : PostORMModelIn = {
+            boardTag : postData.boardTag,
+            postTitle : postData.postTitle,
+            postText : postData.postText
+        }
+
+        const createdPost : PostORMModelOut | null = await BoardsRepository.AddPost(post)
 
         if (!createdPost){
             return null
         }
 
-        //Mapping post ORM model to view model
+        //Mapping PostORMModel to PostViewModel
         return {
             id : createdPost.id,
             title : createdPost.title,
@@ -77,7 +86,7 @@ export const BoardsService = {
     },
 
     async GetPost(boardTag : string, postId : number) : Promise<PostViewModel | null>{
-        const foundPost : PostORMModel | null = await BoardsRepository.GetPost(boardTag, postId);
+        const foundPost : PostORMModelOut | null = await BoardsRepository.GetPost(boardTag, postId);
 
         if (!foundPost){
             return null
@@ -91,6 +100,7 @@ export const BoardsService = {
             creation_time : foundPost.creation_time,
             reply : foundPost.reply
         }
+    },
 
-    }
+    async AddReplyToPost(){}
 }

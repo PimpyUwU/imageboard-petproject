@@ -1,12 +1,12 @@
 import {PrismaClient} from '@prisma/client'
-import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
-import {PostORMModel} from "../../types/models/ORM/PostORMModel";
-import {CreatePostORMModel} from "../../types/models/ORM/CreatePostORMModel";
+import {BoardORMModeOut} from "../../types/models/Output/ORM/BoardORMModeOut";
+import {PostORMModelOut} from "../../types/models/Output/ORM/PostORMModelOut";
+import {PostORMModelIn} from "../../types/models/Input/ORM/PostORMModelIn";
 
 const prisma: PrismaClient = new PrismaClient()
 
 export const BoardsRepository = {
-    async GetAllBoards() : Promise<BoardORMModel[] | null> {
+    async GetAllBoards() : Promise<BoardORMModeOut[] | null> {
         return prisma.boards.findMany(
             {
                 include : {
@@ -21,7 +21,7 @@ export const BoardsRepository = {
     },
 
 
-    async GetBoardByTag(tag: string) : Promise<BoardORMModel | null> {
+    async GetBoardByTag(tag: string) : Promise<BoardORMModeOut | null> {
         return prisma.boards.findFirst({
             where : {
                 tag: tag
@@ -44,12 +44,12 @@ export const BoardsRepository = {
         })
     },
 
-    async AddPost(boardTag: string, post_title: string, post_text: string): Promise<PostORMModel | null> {
+    async AddPost(post : PostORMModelIn): Promise<PostORMModelOut | null> {
         let board_id: number | null = null;
 
         const board = await prisma.boards.findFirst({
             where: {
-                tag: boardTag
+                tag: post.boardTag
             },
             select: {
                 id: true
@@ -62,21 +62,19 @@ export const BoardsRepository = {
             board_id = board.id;
         }
 
-        const postData: CreatePostORMModel = {
-            title: post_title,
-            text: post_text,
-            board_id: board_id
-        };
-
         return prisma.post.create({
-            data: postData,
+            data: {
+                board_id : board_id,
+                title : post.postTitle,
+                text : post.postText
+            },
             include: {
                 reply: true
             }
         })
     },
 
-    async GetPost(boardTag : string, postId : number) : Promise<PostORMModel | null>{
+    async GetPost(boardTag : string, postId : number) : Promise<PostORMModelOut | null>{
         return prisma.post.findFirst({
             where: {
                 id: postId,
