@@ -74,6 +74,21 @@ export const BoardsRepository = {
                 reply: true
             }
         })
+    },
+
+    async GetPost(boardTag : string, postId : number) : Promise<PostORMModel | null>{
+        return prisma.post.findFirst({
+            where: {
+                id: postId,
+                board: {
+                    tag: boardTag
+                },
+                is_deleted : false
+            },
+            include: {
+                reply: true
+            }
+        });
     }
 
 }

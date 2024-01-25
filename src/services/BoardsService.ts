@@ -3,6 +3,7 @@ import {BoardViewModel} from "../../types/models/ViewModels/BoardViewModel";
 import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewModel";
 import {BoardORMModel} from "../../types/models/ORM/BoardORMModel";
 import {PostViewModel} from "../../types/models/ViewModels/PostViewModel";
+import {PostORMModel} from "../../types/models/ORM/PostORMModel";
 
 export const BoardsService = {
     async GetAllBoards() : Promise<BoardsListViewModel[] | null> {
@@ -59,12 +60,13 @@ export const BoardsService = {
             return null
         }
 
-        const createdPost : PostViewModel | null = await BoardsRepository.AddPost(boardTag, postTitle, postText)
+        const createdPost : PostORMModel | null = await BoardsRepository.AddPost(boardTag, postTitle, postText)
 
         if (!createdPost){
             return null
         }
 
+        //Mapping post ORM model to view model
         return {
             id : createdPost.id,
             title : createdPost.title,
@@ -72,5 +74,23 @@ export const BoardsService = {
             creation_time : createdPost.creation_time,
             reply : createdPost.reply
         }
+    },
+
+    async GetPost(boardTag : string, postId : number) : Promise<PostViewModel | null>{
+        const foundPost : PostORMModel | null = await BoardsRepository.GetPost(boardTag, postId);
+
+        if (!foundPost){
+            return null
+        }
+
+        //Mapping post ORM model to view model
+        return {
+            id : foundPost.id,
+            title : foundPost.title,
+            text : foundPost.text,
+            creation_time : foundPost.creation_time,
+            reply : foundPost.reply
+        }
+
     }
 }

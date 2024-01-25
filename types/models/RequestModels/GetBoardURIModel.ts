@@ -1,3 +1,3 @@
 export type GetBoardURIModel = {
-    tag: string;
+    boardTag : string;
 }

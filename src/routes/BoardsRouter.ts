@@ -1,12 +1,13 @@
 import express, {Response, Request} from "express";
 import {RequestWithURIParam, RequestWithURIParamsAndBody} from "../../types/RequestTypes";
-import {GetBoardURIModel} from "../../types/models/GetBoardURIModel";
+import {GetBoardURIModel} from "../../types/models/RequestModels/GetBoardURIModel";
 import {BoardViewModel} from "../../types/models/ViewModels/BoardViewModel";
 import {BoardsListViewModel} from "../../types/models/ViewModels/BoardsListViewModel";
 import {BoardsService} from "../services/BoardsService";
 import HTTP_CODES from "../HTTP_CODES";
 import {CreatePostModel} from "../../types/models/RequestModels/CreatePostModel";
 import {PostViewModel} from "../../types/models/ViewModels/PostViewModel";
+import {GetPostURIModel} from "../../types/models/RequestModels/GetPostURIModel";
 
 export const GetBoardsRouter = () => {
     const router = express.Router()
@@ -25,9 +26,11 @@ export const GetBoardsRouter = () => {
     })
 
     //All posts from concrete board by tag
-    router.get("/:tag", async (req : RequestWithURIParam<GetBoardURIModel>,
+    router.get("/:boardTag", async (req : RequestWithURIParam<GetBoardURIModel>,
                                     res : Response<BoardViewModel> ) => {
-        const result: BoardViewModel | null = await BoardsService.GetBoardByTag(req.params.tag)
+        const boardTag : string = req.params.boardTag
+
+        const result: BoardViewModel | null = await BoardsService.GetBoardByTag(boardTag)
 
         if(!result){
             res.status(HTTP_CODES.NO_CONTENT_204).send()
@@ -38,9 +41,9 @@ export const GetBoardsRouter = () => {
     })
 
     //Create new Post for board by tag
-    router.post("/:tag", async (req : RequestWithURIParamsAndBody<GetBoardURIModel, CreatePostModel>,
+    router.post("/:boardTag", async (req : RequestWithURIParamsAndBody<GetBoardURIModel, CreatePostModel>,
                                 res : Response<PostViewModel> )=>{
-        const boardTag : string = req.params.tag
+        const boardTag : string = req.params.boardTag
         const postTitle : string = req.body.title
         const postText : string = req.body.text
 
@@ -54,6 +57,24 @@ export const GetBoardsRouter = () => {
         }
 
     })
+
+    //Get post and all it's replies from concrete board
+    router.get("/:boardTag/:postId", async (req : RequestWithURIParam<GetPostURIModel>,
+                                            res : Response<PostViewModel>)=> {
+        const boardTag : string = req.params.tag
+        const postID : number = +req.params.postID
+
+        const post : PostViewModel | null = await BoardsService.GetPost(boardTag, postID)
+
+        if(!post){
+            res.status(HTTP_CODES.NO_CONTENT_204).send()
+        }
+        else{
+            res.status(HTTP_CODES.OK_200).json(post)
+        }
+    })
+
+    router.post("", )
 
     return router;
 }
