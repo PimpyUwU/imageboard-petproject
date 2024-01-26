@@ -1,26 +1,19 @@
 import express from "express";
+import {AdminController} from "../controllers/AdminController";
+
 
 export const GetAdminRouter = () : express.Router => {
     const router = express.Router()
 
-    router.get('/sign-up', (req, res) => {
-    })
+    router.get('/sign-up', AdminController.signUpGet)
 
-    router.get('/log-in', (req, res) => {
+    router.get('/log-in', AdminController.logInGet)
 
-    })
+    router.post('/sign-in', AdminController.signUpPost)
 
-    router.post('/sign-in', () => {
+    router.post('/log-in', AdminController.logInPost)
 
-    })
-
-    router.post('/log-in', () => {
-
-    })
-
-    router.get('/log-out', () => {
-
-    })
+    router.get('/log-out', AdminController.logOut)
 
     return router
 }
