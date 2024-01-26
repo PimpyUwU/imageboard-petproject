@@ -118,6 +118,9 @@ export const BoardsService = {
             postId : reply.postId
         }
 
+        if (!await BoardsRepository.GetPost(reply.boardTag, reply.postId))
+            return null
+
         const createdReply : ReplyORMModelOut | null =  await BoardsRepository.AddReplyToPost(replyData)
 
         if(!createdReply){
@@ -132,6 +135,6 @@ export const BoardsService = {
             creation_time : createdReply.creation_time,
             reply_id : createdReply.reply_id,
             post_id : createdReply.post_id
-        }
+        };
     }
 }

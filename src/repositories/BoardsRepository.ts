@@ -92,7 +92,6 @@ export const BoardsRepository = {
     },
 
     async AddReplyToPost(reply : ReplyORMModelin) : Promise<ReplyORMModelOut | null> {
-
         return prisma.reply.create({
             data: {
                 title: reply.replyTitle,
