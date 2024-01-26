@@ -100,7 +100,6 @@ export const BoardsRepository = {
                 post_id: reply.postId
             }
         });
-
     }
 
 }
