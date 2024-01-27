@@ -1,15 +1,15 @@
 import {BoardsRepository} from "../repositories/BoardsRepository";
-import {BoardViewModel} from "../../types/models/Output/ViewModels/BoardViewModel";
-import {BoardsListViewModel} from "../../types/models/Output/ViewModels/BoardsListViewModel";
-import {BoardORMModeOut} from "../../types/models/Output/ORM/BoardORMModeOut";
-import {PostViewModel} from "../../types/models/Output/ViewModels/PostViewModel";
-import {PostORMModelOut} from "../../types/models/Output/ORM/PostORMModelOut";
-import {PostServiceModelIn} from "../../types/models/Input/ServiceModels/PostServiceModelIn";
-import {PostORMModelIn} from "../../types/models/Input/ORM/PostORMModelIn";
-import {ReplyServiceModelin} from "../../types/models/Input/ServiceModels/ReplyServiceModelIn";
-import {ReplyViewModel} from "../../types/models/Output/ViewModels/ReplyViewModel";
-import {ReplyORMModelin} from "../../types/models/Input/ORM/ReplyORMModelin";
-import {ReplyORMModelOut} from "../../types/models/Output/ORM/ReplyORMModelOut";
+import {BoardViewModel} from "../../types/models/Boards/Output/ViewModels/BoardViewModel";
+import {BoardsListViewModel} from "../../types/models/Boards/Output/ViewModels/BoardsListViewModel";
+import {BoardORMModeOut} from "../../types/models/Boards/Output/ORM/BoardORMModeOut";
+import {PostViewModel} from "../../types/models/Boards/Output/ViewModels/PostViewModel";
+import {PostORMModelOut} from "../../types/models/Boards/Output/ORM/PostORMModelOut";
+import {PostServiceModelIn} from "../../types/models/Boards/Input/ServiceModels/PostServiceModelIn";
+import {PostORMModelIn} from "../../types/models/Boards/Input/ORM/PostORMModelIn";
+import {ReplyServiceModelin} from "../../types/models/Boards/Input/ServiceModels/ReplyServiceModelIn";
+import {ReplyViewModel} from "../../types/models/Boards/Output/ViewModels/ReplyViewModel";
+import {ReplyORMModelin} from "../../types/models/Boards/Input/ORM/ReplyORMModelin";
+import {ReplyORMModelOut} from "../../types/models/Boards/Output/ORM/ReplyORMModelOut";
 
 export const BoardsService = {
     async GetAllBoards() : Promise<BoardsListViewModel[] | null> {

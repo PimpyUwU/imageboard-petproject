@@ -1,9 +1,9 @@
 import {PrismaClient} from '@prisma/client'
-import {BoardORMModeOut} from "../../types/models/Output/ORM/BoardORMModeOut";
-import {PostORMModelOut} from "../../types/models/Output/ORM/PostORMModelOut";
-import {PostORMModelIn} from "../../types/models/Input/ORM/PostORMModelIn";
-import {ReplyORMModelin} from "../../types/models/Input/ORM/ReplyORMModelin";
-import {ReplyORMModelOut} from "../../types/models/Output/ORM/ReplyORMModelOut";
+import {BoardORMModeOut} from "../../types/models/Boards/Output/ORM/BoardORMModeOut";
+import {PostORMModelOut} from "../../types/models/Boards/Output/ORM/PostORMModelOut";
+import {PostORMModelIn} from "../../types/models/Boards/Input/ORM/PostORMModelIn";
+import {ReplyORMModelin} from "../../types/models/Boards/Input/ORM/ReplyORMModelin";
+import {ReplyORMModelOut} from "../../types/models/Boards/Output/ORM/ReplyORMModelOut";
 
 const prisma: PrismaClient = new PrismaClient()
 

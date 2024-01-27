@@ -1,17 +1,17 @@
 import {Request, Response} from "express";
-import {BoardsListViewModel} from "../../types/models/Output/ViewModels/BoardsListViewModel";
+import {BoardsListViewModel} from "../../types/models/Boards/Output/ViewModels/BoardsListViewModel";
 import {BoardsService} from "../services/BoardsService";
 import HTTP_CODES from "../HTTP_CODES";
 import {RequestWithURIParam, RequestWithURIParamsAndBody} from "../../types/RequestTypes";
-import {GetBoardURIModel} from "../../types/models/Input/RequestModels/GetBoardURIModel";
-import {BoardViewModel} from "../../types/models/Output/ViewModels/BoardViewModel";
-import {CreatePostBodyModel} from "../../types/models/Input/RequestModels/CreatePostBodyModel";
-import {PostViewModel} from "../../types/models/Output/ViewModels/PostViewModel";
-import {PostServiceModelIn} from "../../types/models/Input/ServiceModels/PostServiceModelIn";
-import {GetPostURIModel} from "../../types/models/Input/RequestModels/GetPostURIModel";
-import {CreateReplyBodyModel} from "../../types/models/Input/RequestModels/CreateReplyBodyModel";
-import {ReplyViewModel} from "../../types/models/Output/ViewModels/ReplyViewModel";
-import {ReplyServiceModelin} from "../../types/models/Input/ServiceModels/ReplyServiceModelIn";
+import {GetBoardURIModel} from "../../types/models/Boards/Input/RequestModels/GetBoardURIModel";
+import {BoardViewModel} from "../../types/models/Boards/Output/ViewModels/BoardViewModel";
+import {CreatePostBodyModel} from "../../types/models/Boards/Input/RequestModels/CreatePostBodyModel";
+import {PostViewModel} from "../../types/models/Boards/Output/ViewModels/PostViewModel";
+import {PostServiceModelIn} from "../../types/models/Boards/Input/ServiceModels/PostServiceModelIn";
+import {GetPostURIModel} from "../../types/models/Boards/Input/RequestModels/GetPostURIModel";
+import {CreateReplyBodyModel} from "../../types/models/Boards/Input/RequestModels/CreateReplyBodyModel";
+import {ReplyViewModel} from "../../types/models/Boards/Output/ViewModels/ReplyViewModel";
+import {ReplyServiceModelin} from "../../types/models/Boards/Input/ServiceModels/ReplyServiceModelIn";
 
 export const BoardsController = {
     async allBoardsGet(_req: Request,

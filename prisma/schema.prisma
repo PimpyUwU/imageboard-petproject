@@ -19,6 +19,7 @@ model User {
   role            Role
   Deleted_posts   Deleted_posts[]
   Deleted_replyes Deleted_replyes[]
+  is_verified     Boolean           @default(false)
 }
 
 model Boards {
