@@ -16,9 +16,9 @@ model User {
   nickname        String
   email           String            @unique
   password        String
-  role            Role
+  role            Role              @default(REQUEST)
   Deleted_posts   Deleted_posts[]
-  Deleted_replyes Deleted_replyes[]
+  Deleted_replies Deleted_replies[]
   is_verified     Boolean           @default(false)
 }
 
@@ -53,7 +53,7 @@ model Reply {
   replies         Reply[]          @relation("ReplyToReply")
   post_id         Int
   post            Post             @relation(fields: [post_id], references: [id])
-  Deleted_replyes Deleted_replyes?
+  Deleted_replies Deleted_replies?
 }
 
 model Deleted_posts {
@@ -63,7 +63,7 @@ model Deleted_posts {
   post     Post @relation(fields: [post_id], references: [id])
 }
 
-model Deleted_replyes {
+model Deleted_replies {
   reply_id Int   @id
   admin_id Int
   user     User  @relation(fields: [admin_id], references: [id])
@@ -73,4 +73,5 @@ model Deleted_replyes {
 enum Role {
   ADMIN
   SUPERADMIN
+  REQUEST
 }

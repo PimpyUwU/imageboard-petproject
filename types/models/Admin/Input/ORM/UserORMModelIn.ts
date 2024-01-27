@@ -1,4 +1,5 @@
 export type UserORMModelIn = {
-    email : string,
-    password : string
+    userNickname : string
+    userEmail : string,
+    userPassword : string
 }
