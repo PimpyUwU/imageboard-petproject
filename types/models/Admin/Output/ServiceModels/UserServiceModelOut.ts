@@ -1,7 +1,7 @@
-import {DeletedPostORMModelOut} from "./DeletedPostORMModelOut";
-import {DeletedReplyORMModelOut} from "./DeletedReplyORMModelOut";
+import {DeletedPostORMModelOut} from "../ORM/DeletedPostORMModelOut";
+import {DeletedReplyORMModelOut} from "../ORM/DeletedReplyORMModelOut";
 
-export type UserORMModelOut = {
+export type UserServiceModelOut = {
     id : number,
     nickname : string,
     email : string,

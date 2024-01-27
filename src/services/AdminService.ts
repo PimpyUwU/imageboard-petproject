@@ -1,11 +1,11 @@
 import {AdminRepository} from "../repositories/AdminRepository";
 import {UserServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/UserServiceModelIn";
 import {UserORMModelIn} from "../../types/models/Admin/Input/ORM/UserORMModelIn";
-import * as querystring from "querystring";
 import {UserORMModelOut} from "../../types/models/Admin/Output/ORM/UserORMModelOut";
+import {UserServiceModelOut} from "../../types/models/Admin/Output/ServiceModels/UserServiceModelOut";
 
 export const AdminService  = {
-    async signUp(userData : UserServiceModelIn){
+    async signUp(userData : UserServiceModelIn) : Promise<UserServiceModelOut | null>{
         const user : UserORMModelIn = {
             userNickname : userData.userNickname,
             userEmail : userData.userEmail,
@@ -19,7 +19,6 @@ export const AdminService  = {
         if(!createdUser){
             return null
         }
-
-
+        return createdUser
     }
 }
