@@ -5,7 +5,7 @@ import {RequestWithBody} from "../../types/RequestTypes";
 import {SignInBodyModel} from "../../types/models/Admin/Input/RequestModels/SignInBodyModel";
 import {UserViewModel} from "../../types/models/Admin/Output/ViewModels/UserViewModel";
 import {UserServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/UserServiceModelIn";
-
+import {SECRET_KEY} from "../../env";
 
 export const AdminController = {
     async signUpGet(req : Request,
@@ -41,6 +41,8 @@ export const AdminController = {
 
     }
 }
-const createJwt = async (id : number) : Promise<Jwt> => {
-    return jwt.sign({id})
+const createJwt = async (id : number) : Promise<string> => {
+    return jwt.sign({id}, SECRET_KEY, {
+        expiresIn : 3 * 24 * 60 * 60
+    })
 }
