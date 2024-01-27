@@ -17,6 +17,7 @@
   "repository": "https://github.com/PimpyUwU/imageboard-petproject.git",
   "author": "PimpyUwU <pimpy.owo@gmail.com>",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/node": "^20.11.5",
     "nodemon": "^3.0.2",

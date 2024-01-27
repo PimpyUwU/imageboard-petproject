@@ -66,7 +66,7 @@ export const BoardsService = {
             return null
         }
 
-        //map postData from PostServiceModel to PostORMModel (input)
+        //map postData from PostServiceModel to PostORMModel (Input)
         const post : PostORMModelIn = {
             boardTag : postData.boardTag,
             postTitle : postData.postTitle,
