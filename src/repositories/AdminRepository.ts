@@ -24,8 +24,8 @@ export const AdminRepository = {
                     Deleted_replies: true
                 }
             })
-        } catch (e) {
-            if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
+        } catch (err) {
+            if (err instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
                 throw new Error("Email is already used")
             }
 

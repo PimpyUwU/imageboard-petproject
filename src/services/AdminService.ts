@@ -15,10 +15,16 @@ export const AdminService  = {
             return null
         }
 
-        const createdUser : UserORMModelOut | null = await AdminRepository.signUp(user)
-        if(!createdUser){
-            return null
+        try {
+            const createdUser: UserORMModelOut | null = await AdminRepository.signUp(user)
+
+            if(!createdUser){
+                return null
+            }
+            return createdUser
         }
-        return createdUser
+        catch (err){
+            throw err
+        }
     }
 }
