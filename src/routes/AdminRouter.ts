@@ -9,7 +9,7 @@ export const GetAdminRouter = () : express.Router => {
 
     router.get('/log-in', AdminController.logInGet)
 
-    router.post('/sign-in', AdminController.signUpPost)
+    router.post('/sign-up', AdminController.signUpPost)
 
     router.post('/log-in', AdminController.logInPost)
 
