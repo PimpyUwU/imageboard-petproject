@@ -74,7 +74,7 @@ export const AdminController = {
                 httpOnly : true,
                 maxAge : 3 * 24 * 60 * 60 * 1000
             })
-            res.status(HTTP_CODES.CREATED_201).json({id : user.id})
+            res.status(HTTP_CODES.OK_200).json({id : user.id})
         }
         catch (err){
             if(err instanceof Error){

@@ -44,7 +44,7 @@ export const AdminRepository = {
         if (!user){
             throw new Error("email")
         }
-        if (!await bcrypt.compare(user.password, userData.password)){
+        if (!await bcrypt.compare(userData.password, user.password)){
             throw new Error("password")
         }
 
