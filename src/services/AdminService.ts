@@ -1,12 +1,14 @@
 import {AdminRepository} from "../repositories/AdminRepository";
-import {UserServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/UserServiceModelIn";
-import {UserORMModelIn} from "../../types/models/Admin/Input/ORM/UserORMModelIn";
+import {SignUpServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/SignUpServiceModelIn";
+import {SignUpORMModelIn} from "../../types/models/Admin/Input/ORM/SignUpORMModelIn";
 import {UserORMModelOut} from "../../types/models/Admin/Output/ORM/UserORMModelOut";
 import {UserServiceModelOut} from "../../types/models/Admin/Output/ServiceModels/UserServiceModelOut";
+import {LogInServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/LogInServiceModelIn";
+import {LogInORMModelIn} from "../../types/models/Admin/Input/ORM/LogInORMModelIn";
 
 export const AdminService  = {
-    async signUp(userData : UserServiceModelIn) : Promise<UserServiceModelOut | null>{
-        const user : UserORMModelIn = {
+    async signUp(userData : SignUpServiceModelIn) : Promise<UserServiceModelOut | null>{
+        const user : SignUpORMModelIn = {
             userNickname : userData.userNickname,
             userEmail : userData.userEmail,
             userPassword : userData.userPassword
@@ -17,7 +19,7 @@ export const AdminService  = {
         }
 
         try {
-            const createdUser: UserORMModelOut | null = await AdminRepository.signUp(user)
+            const createdUser:  UserORMModelOut | null = await AdminRepository.signUp(user)
 
             if(!createdUser){
                 return null
@@ -27,5 +29,19 @@ export const AdminService  = {
         catch (err){
             throw err
         }
+    },
+
+    async logIn(user : LogInServiceModelIn) {
+        const userData : LogInORMModelIn = {
+            email : user.email,
+            password : user.password
+        }
+
+        try {
+
+        }
+        const rUser : UserORMModelOut = await AdminRepository.logIn(userData)
+
+
     }
 }

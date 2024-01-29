@@ -3,7 +3,7 @@ import {DeletedReplyORMModelOut} from "../ORM/DeletedReplyORMModelOut";
 
 export type UserServiceModelOut = {
     id : number,
-    nickname : string,
+    nickname : string | null,
     email : string,
     password : string,
     role : string,

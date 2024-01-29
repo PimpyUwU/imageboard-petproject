@@ -2,13 +2,15 @@ import {Request, Response} from "express";
 import jwt from "jsonwebtoken";
 import {AdminService} from "../services/AdminService";
 import {RequestWithBody} from "../../types/RequestTypes";
-import {SignInBodyModel} from "../../types/models/Admin/Input/RequestModels/SignInBodyModel";
+import {SignUpBodyModel} from "../../types/models/Admin/Input/RequestModels/SignUpBodyModel";
 import {UserViewModel} from "../../types/models/Admin/Output/ViewModels/UserViewModel";
-import {UserServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/UserServiceModelIn";
+import {SignUpServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/SignUpServiceModelIn";
 import {SECRET_KEY} from "../../env";
 import {UserServiceModelOut} from "../../types/models/Admin/Output/ServiceModels/UserServiceModelOut";
 import HTTP_CODES from "../HTTP_CODES";
 import {Prisma} from "@prisma/client";
+import {LogInBodyModel} from "../../types/models/Admin/Input/RequestModels/LogInBodyModel";
+import {LogInServiceModelIn} from "../../types/models/Admin/Input/ServiceModels/LogInServiceModelIn";
 
 export const AdminController = {
     async signUpGet(req : Request,
@@ -16,9 +18,9 @@ export const AdminController = {
         res.status(200).send()
     },
 
-    async signUpPost(req : RequestWithBody<SignInBodyModel>,
+    async signUpPost(req : RequestWithBody<SignUpBodyModel>,
                      res : Response<UserViewModel>){
-        const userData : UserServiceModelIn = {
+        const userData : SignUpServiceModelIn = {
             userNickname : req.body.userNickname,
             userEmail : req.body.email,
             userPassword : req.body.password
@@ -38,24 +40,32 @@ export const AdminController = {
                 httpOnly : true,
                 maxAge : 3 * 24 * 60 * 60 * 1000
             })
-            res.status(HTTP_CODES.CREATED_201).json({user : createdUser.id})
+            res.status(HTTP_CODES.CREATED_201).json({id : createdUser.id})
         }
         catch (err){
             //email already used
             if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === 'P2002') {
-                res.status(HTTP_CODES.EMAIL_ALREADY_USED).send
+                res.status(HTTP_CODES.EMAIL_ALREADY_USED).send()
             }
+            res.status(HTTP_CODES.BAD_REQUEST_400).send()
         }
 
     },
 
     async logInGet(req : Request,
                    res : Response){
-
+        res.status(HTTP_CODES.OK_200).send()
     },
 
-    async logInPost(req : Request,
+    async logInPost(req : Request<LogInBodyModel>,
                     res : Response){
+        const userData : LogInServiceModelIn = {
+            email : req.body.email,
+            password : req.body.password
+        }
+
+        const user = AdminService.logIn(userData)
+
 
     },
 
