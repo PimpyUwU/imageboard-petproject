@@ -25,11 +25,7 @@ export const AdminRepository = {
                 }
             })
         } catch (err) {
-            if (err instanceof Prisma.PrismaClientKnownRequestError && e.code === 'P2002') {
-                throw new Error("Email is already used")
-            }
-
-            return null
+            throw err
         }
     }
 }

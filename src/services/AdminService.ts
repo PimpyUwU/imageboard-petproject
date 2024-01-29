@@ -11,6 +11,7 @@ export const AdminService  = {
             userEmail : userData.userEmail,
             userPassword : userData.userPassword
         }
+
         if(!user.userEmail || !user.userPassword){
             return null
         }
