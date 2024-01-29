@@ -64,7 +64,26 @@ export const AdminController = {
             password : req.body.password
         }
 
-        const user = AdminService.logIn(userData)
+        try {
+            const user : UserServiceModelOut = await AdminService.logIn(userData)
+
+            const token : string = await createJwt(user.id)
+
+            //successfully logged-in user
+            res.cookie('jwt', token, {
+                httpOnly : true,
+                maxAge : 3 * 24 * 60 * 60 * 1000
+            })
+            res.status(HTTP_CODES.CREATED_201).json({id : user.id})
+        }
+        catch (err){
+            if(err instanceof Error){
+                if(err.message === "password" || err.message === "email"){
+                    res.status(HTTP_CODES.UNAUTHORIZED_401).send()
+                }
+            }
+            res.status(HTTP_CODES.BAD_REQUEST_400).send()
+        }
 
 
     },

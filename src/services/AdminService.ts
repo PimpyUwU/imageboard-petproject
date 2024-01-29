@@ -38,10 +38,23 @@ export const AdminService  = {
         }
 
         try {
+            const rUser : UserORMModelOut = await AdminRepository.logIn(userData)
 
+            const mappedUser : UserServiceModelOut = {
+                id : rUser.id,
+                nickname : rUser.nickname,
+                email : rUser.email,
+                password : rUser.password,
+                role : rUser.role,
+                is_verified : rUser.is_verified,
+                Deleted_posts : rUser.Deleted_posts,
+                Deleted_replies : rUser.Deleted_replies,
+            }
+
+            return mappedUser
         }
-        const rUser : UserORMModelOut = await AdminRepository.logIn(userData)
-
-
+        catch (err){
+            throw err
+        }
     }
 }
