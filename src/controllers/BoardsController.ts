@@ -30,6 +30,8 @@ export const BoardsController = {
                            res : Response<BoardViewModel> ){
         const boardTag : string = req.params.boardTag
 
+        console.log(res.locals)
+
         const result: BoardViewModel | null = await BoardsService.GetBoardByTag(boardTag)
 
         if(!result){

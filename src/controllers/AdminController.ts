@@ -33,7 +33,8 @@ export const AdminController = {
                 return
             }
 
-            const token : string = await createJwt(createdUser.id)
+            const token : string = await createJwt(createdUser.id, createdUser.role
+            )
 
             //successfully created user
             res.cookie('jwt', token, {
@@ -67,7 +68,7 @@ export const AdminController = {
         try {
             const user : UserServiceModelOut = await AdminService.logIn(userData)
 
-            const token : string = await createJwt(user.id)
+            const token : string = await createJwt(user.id, user.role)
 
             //successfully logged-in user
             res.cookie('jwt', token, {
@@ -97,8 +98,8 @@ export const AdminController = {
     }
 }
 
-const createJwt = async (id : number) : Promise<string> => {
-    return jwt.sign({id}, SECRET_KEY, {
+const createJwt = async (id : number, role : string) : Promise<string> => {
+    return jwt.sign({id : id, role : role}, SECRET_KEY, {
         expiresIn : 3 * 24 * 60 * 60
     })
 }

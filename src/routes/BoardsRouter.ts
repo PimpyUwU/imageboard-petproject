@@ -1,6 +1,6 @@
 import express, {Response, Request} from "express";
 import {BoardsController} from "../controllers/BoardsController";
-import {requireAuthorization} from "../middleware/requireAuthorization";
+import {authorizationMiddleware} from "../middleware/authorizationMiddleware";
 
 export const GetBoardsRouter = () => {
     const router = express.Router()
