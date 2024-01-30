@@ -1,5 +1,12 @@
 import {Request} from "express";
 
+
+
+export interface RequestWithJWT extends Request {
+    cookies: {
+        jwt : string | null
+    };
+}
 export type RequestWithQueryParams<T> = Request<{}, {}, {}, T>
 export type RequestWithURIParam<T> = Request<T>
 export type RequestWithBody<T> = Request<{}, {}, T>

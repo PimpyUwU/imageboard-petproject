@@ -1,5 +1,6 @@
 import express, {Response, Request} from "express";
 import {BoardsController} from "../controllers/BoardsController";
+import {requireAuthorization} from "../middleware/requireAuthorization";
 
 export const GetBoardsRouter = () => {
     const router = express.Router()
@@ -8,7 +9,7 @@ export const GetBoardsRouter = () => {
     router.get("/", BoardsController.allBoardsGet)
 
     //All posts from concrete board by tag
-    router.get("/:boardTag", BoardsController.concreteBoardGet)
+    router.get("/:boardTag", requireAuthorization, BoardsController.concreteBoardGet)
 
     //Create new Post for board by tag
     router.post("/:boardTag", BoardsController.addNewPost)
