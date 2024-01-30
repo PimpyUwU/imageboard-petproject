@@ -57,7 +57,7 @@ export const AdminController = {
         res.status(HTTP_CODES.OK_200).send()
     },
 
-    async logInPost(req : Request<LogInBodyModel>,
+    async logInPost(req : RequestWithBody<LogInBodyModel>,
                     res : Response){
         const userData : LogInServiceModelIn = {
             email : req.body.email,
@@ -90,9 +90,13 @@ export const AdminController = {
 
     async logOut(req : Request,
                  res : Response){
-
+        res.cookie('jwt', '', {
+            maxAge : 1,
+            httpOnly : true
+        }).redirect('/')
     }
 }
+
 const createJwt = async (id : number) : Promise<string> => {
     return jwt.sign({id}, SECRET_KEY, {
         expiresIn : 3 * 24 * 60 * 60

@@ -9,7 +9,7 @@ export const GetBoardsRouter = () => {
     router.get("/", BoardsController.allBoardsGet)
 
     //All posts from concrete board by tag
-    router.get("/:boardTag", requireAuthorization, BoardsController.concreteBoardGet)
+    router.get("/:boardTag", BoardsController.concreteBoardGet)
 
     //Create new Post for board by tag
     router.post("/:boardTag", BoardsController.addNewPost)

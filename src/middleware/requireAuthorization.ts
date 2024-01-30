@@ -10,11 +10,11 @@ export const requireAuthorization = (req : RequestWithJWT, res : Response, next 
     if(token){
         jwt.verify(token, SECRET_KEY,(error, decodedToken) => {
             if(error){
-                res.redirect("admin/log-in")
+                res.redirect("/admin/log-in")
             }
             else
                 next()
         })
     }
-    else res.redirect("admin/log-in")
+    else res.redirect("/admin/log-in")
 }
