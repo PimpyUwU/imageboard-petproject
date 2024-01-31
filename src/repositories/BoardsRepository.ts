@@ -100,6 +100,10 @@ export const BoardsRepository = {
                 post_id: reply.postId
             }
         });
+    },
+
+    async DeletePost(boardTag : string, boardId : number) : Promise<PostORMModelOut | null> {
+
     }
 
 }

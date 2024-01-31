@@ -92,6 +92,26 @@ export const BoardsController = {
         else{
             res.status(HTTP_CODES.CREATED_201).json(reply)
         }
+    },
+
+    async deletePost(req : RequestWithURIParam<GetPostURIModel>,
+                     res : Response<PostViewModel>){
+        const boardTag : string = req.params.boardTag
+        const postId : number = +req.params.postId
+
+        if(!boardTag || !postId){
+            res.status(HTTP_CODES.BAD_REQUEST_400).send()
+            return
+        }
+
+        const deletedPost : PostViewModel | null = await BoardsService.DeletePost(boardTag, postId)
+
+        if(!deletedPost){
+            res.status(HTTP_CODES.NO_CONTENT_204).send()
+            return
+        }
+
+        res.status(HTTP_CODES.OK_200).json(deletedPost)
     }
 }
 

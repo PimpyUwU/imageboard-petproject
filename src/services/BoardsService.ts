@@ -10,6 +10,7 @@ import {ReplyServiceModelin} from "../../types/models/Boards/Input/ServiceModels
 import {ReplyViewModel} from "../../types/models/Boards/Output/ViewModels/ReplyViewModel";
 import {ReplyORMModelin} from "../../types/models/Boards/Input/ORM/ReplyORMModelin";
 import {ReplyORMModelOut} from "../../types/models/Boards/Output/ORM/ReplyORMModelOut";
+import {BoardsController} from "../controllers/BoardsController";
 
 export const BoardsService = {
     async GetAllBoards() : Promise<BoardsListViewModel[] | null> {
@@ -136,5 +137,22 @@ export const BoardsService = {
             reply_id : createdReply.reply_id,
             post_id : createdReply.post_id
         };
+    },
+
+    async DeletePost(boardTag : string, postId : number) : Promise<PostViewModel | null>{
+        const post : PostORMModelOut | null = await BoardsRepository.DeletePost(boardTag, postId)
+
+        if(!post){
+            return null
+        }
+
+        //mapping post to view model
+        return {
+            id : post.id,
+            title : post.title,
+            text : post.text,
+            creation_time : post.creation_time,
+            reply : post.reply
+        }
     }
 }
