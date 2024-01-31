@@ -1,4 +1,4 @@
-import {PrismaClient, Prisma} from "@prisma/client"
+import {PrismaClient} from "@prisma/client"
 import {SignUpORMModelIn} from "../../types/models/Admin/Input/ORM/SignUpORMModelIn";
 import {UserORMModelOut} from "../../types/models/Admin/Output/ORM/UserORMModelOut";
 import bcrypt from "bcrypt";

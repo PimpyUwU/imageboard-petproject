@@ -11,7 +11,7 @@ export const authorizationMiddleware = {
 
 
         if(token){
-            jwt.verify(token, SECRET_KEY,(error, decodedToken) => {
+            jwt.verify(token, SECRET_KEY,(error) => {
                 if(error){
                     res.redirect("/admin/log-in")
                }
