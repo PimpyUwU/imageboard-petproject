@@ -1,5 +1,6 @@
 import express from "express";
 import {BoardsController} from "../controllers/BoardsController";
+import {AuthorizationMiddleware} from "../middleware/AuthorizationMiddleware";
 
 export const GetBoardsRouter = () => {
     const router = express.Router()
@@ -19,7 +20,8 @@ export const GetBoardsRouter = () => {
     //Add reply to post by boardTag and postID
     router.post("/:boardTag/:postId", BoardsController.addNewReply)
 
-    router.delete("/:boardTag/:postId", BoardsController.deletePost)
+    //Delete post(only for MODER or higher)
+    router.delete("/:boardTag/:postId", AuthorizationMiddleware.requireAuthorization, AuthorizationMiddleware.checkUserRoleAndId, BoardsController.deletePost)
 
     return router;
 }

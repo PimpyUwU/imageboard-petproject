@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {BoardsListViewModel} from "../../types/models/Boards/Output/ViewModels/BoardsListViewModel";
 import {BoardsService} from "../services/BoardsService";
 import HTTP_CODES from "../HTTP_CODES";
-import {RequestWithURIParam, RequestWithURIParamsAndBody} from "../../types/RequestTypes";
+import {RequestWithJWT, RequestWithURIParam, RequestWithURIParamsAndBody} from "../../types/RequestTypes";
 import {GetBoardURIModel} from "../../types/models/Boards/Input/RequestModels/GetBoardURIModel";
 import {BoardViewModel} from "../../types/models/Boards/Output/ViewModels/BoardViewModel";
 import {CreatePostBodyModel} from "../../types/models/Boards/Input/RequestModels/CreatePostBodyModel";
@@ -12,6 +12,7 @@ import {GetPostURIModel} from "../../types/models/Boards/Input/RequestModels/Get
 import {CreateReplyBodyModel} from "../../types/models/Boards/Input/RequestModels/CreateReplyBodyModel";
 import {ReplyViewModel} from "../../types/models/Boards/Output/ViewModels/ReplyViewModel";
 import {ReplyServiceModelin} from "../../types/models/Boards/Input/ServiceModels/ReplyServiceModelIn";
+import {userInfo} from "node:os";
 
 export const BoardsController = {
     async allBoardsGet(_req: Request,
@@ -94,17 +95,26 @@ export const BoardsController = {
         }
     },
 
-    async deletePost(req : RequestWithURIParam<GetPostURIModel>,
+    async deletePost(req : Request<GetPostURIModel>,
                      res : Response<PostViewModel>){
-        const boardTag : string = req.params.boardTag
         const postId : number = +req.params.postId
+        const userId : number = +res.locals.id
+        const userRole : string = res.locals.role
 
-        if(!boardTag || !postId){
+        if(!userId || !postId){
             res.status(HTTP_CODES.BAD_REQUEST_400).send()
             return
         }
+        if(!userRole){
+            res.status(HTTP_CODES.UNAUTHORIZED_401).send()
+            return
+        }
+        if(userRole == "REQUEST"){
+            res.status(HTTP_CODES.FORBIDDEN_403).send()
+        }
 
-        const deletedPost : PostViewModel | null = await BoardsService.DeletePost(boardTag, postId)
+
+        const deletedPost : PostViewModel | null = await BoardsService.DeletePost(userId, postId)
 
         if(!deletedPost){
             res.status(HTTP_CODES.NO_CONTENT_204).send()

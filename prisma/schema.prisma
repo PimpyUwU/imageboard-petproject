@@ -71,6 +71,7 @@ model Deleted_replies {
 }
 
 enum Role {
+  MODER
   ADMIN
   SUPERADMIN
   REQUEST

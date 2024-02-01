@@ -102,8 +102,39 @@ export const BoardsRepository = {
         });
     },
 
-    async DeletePost(boardTag : string, boardId : number) : Promise<PostORMModelOut | null> {
+    async DeletePost(userId : number, postId : number) : Promise<PostORMModelOut | null> {
 
+        try {
+
+            const replies : ReplyORMModelOut[] | null = await prisma.reply.updateMany({
+                where: {
+                    post_id: postId
+                },
+                data: {
+                    is_deleted: true
+                }
+            })
+
+            const post: PostORMModelOut | null = await prisma.post.update({
+                data: {
+                    is_deleted: true,
+                },
+                where: {
+                    id: postId
+                },
+                include: {
+                    reply: true
+                }
+            })
+
+            prisma.deleted_posts.create()
+
+
+
+            return post
+        }
+        catch (err){
+            throw err
+        }
     }
-
 }

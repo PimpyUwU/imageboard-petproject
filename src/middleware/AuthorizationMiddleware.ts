@@ -5,7 +5,7 @@ import {RequestWithJWT} from "../../types/RequestTypes";
 
 
 
-export const authorizationMiddleware = {
+export const AuthorizationMiddleware = {
     async requireAuthorization(req : RequestWithJWT, res : Response, next : NextFunction){
         const token : string | null  = req.cookies.jwt
 
@@ -22,7 +22,7 @@ export const authorizationMiddleware = {
         else res.redirect("/admin/log-in")
     },
 
-    async checkUserRole(req : RequestWithJWT, res : Response, next : NextFunction){
+    async checkUserRoleAndId(req : RequestWithJWT, res : Response, next : NextFunction){
         const token : string | null = req.cookies.jwt
 
         if(token){
