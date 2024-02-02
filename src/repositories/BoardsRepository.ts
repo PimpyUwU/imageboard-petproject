@@ -4,7 +4,6 @@ import {PostORMModelOut} from "../../types/models/Boards/Output/ORM/PostORMModel
 import {PostORMModelIn} from "../../types/models/Boards/Input/ORM/PostORMModelIn";
 import {ReplyORMModelin} from "../../types/models/Boards/Input/ORM/ReplyORMModelin";
 import {ReplyORMModelOut} from "../../types/models/Boards/Output/ORM/ReplyORMModelOut";
-import * as buffer from "buffer";
 
 const prisma: PrismaClient = new PrismaClient()
 
@@ -104,34 +103,7 @@ export const BoardsRepository = {
     },
 
     async DeletePost(userId : number, postId : number) : Promise<PostORMModelOut | null> {
-
         try {
-            const replyIDs : {id : number}[] = await prisma.reply.findMany({
-                where : {
-                    post_id : postId
-                },
-                select : {
-                    id : true
-                }
-            })
-
-            const data: {reply_id : number, admin_id : number}[] = await prisma.$transaction(
-                replyIDs.map((reply) => {
-                    return prisma.reply.update({
-                        where: {
-                            id : reply.id
-                        },
-                        data: {
-                            is_deleted: true
-                        },
-                        select: {
-                            id: true
-                        }
-                    })
-                }
-            ));
-
-
             const post: PostORMModelOut | null = await prisma.post.update({
                 data: {
                     is_deleted: true,
@@ -146,6 +118,42 @@ export const BoardsRepository = {
 
             if (!post){
                 return null
+            }
+
+            const replyIDs : {id : number}[] = await prisma.reply.findMany({
+                where : {
+                    post_id : postId
+                },
+                select : {
+                    id : true
+                }
+            })
+
+            //marking replies as deleted
+            await prisma.$transaction(
+                replyIDs.map((reply) => {
+                        return prisma.reply.update({
+                            where: {
+                                id : reply.id
+                            },
+                            data: {
+                                is_deleted: true
+                            },
+                            select: {
+                                id: true
+                            }
+                        })
+                    }
+                )
+            );
+
+            const data: {reply_id : number, admin_id : number}[] = []
+            //moving data to input ORM object
+            for(let i = 0 ; i < replyIDs.length; i++){
+                data.push({
+                    reply_id : replyIDs[i].id,
+                    admin_id : userId
+                })
             }
 
             prisma.deleted_posts.create({
