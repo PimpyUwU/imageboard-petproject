@@ -23,5 +23,7 @@ export const GetBoardsRouter = () => {
     //Delete post(only for MODER or higher)
     router.delete("/:boardTag/:postId", AuthorizationMiddleware.requireAuthorization, AuthorizationMiddleware.checkUserRoleAndId, BoardsController.deletePost)
 
+    router.delete("/:boardTag/:postId/replyId", AuthorizationMiddleware.requireAuthorization, AuthorizationMiddleware.checkUserRoleAndId, BoardsController.deleteReply)
+
     return router;
 }

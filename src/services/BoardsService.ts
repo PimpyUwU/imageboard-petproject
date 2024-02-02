@@ -153,5 +153,21 @@ export const BoardsService = {
             creation_time : post.creation_time,
             reply : post.reply
         }
+    },
+
+    async DeleteReply(userId : number, replyId : number) : Promise<ReplyViewModel | null> {
+        const deletedReply : ReplyORMModelOut | null = await BoardsRepository.DeleteReply(userId, replyId)
+
+        if(!deletedReply)
+            return null
+
+        return {
+            id : deletedReply.id,
+            title : deletedReply.title,
+            text : deletedReply.text,
+            reply_id : deletedReply.reply_id,
+            post_id : deletedReply.post_id,
+            creation_time : deletedReply.creation_time
+        }
     }
 }

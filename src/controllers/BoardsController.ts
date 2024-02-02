@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {BoardsListViewModel} from "../../types/models/Boards/Output/ViewModels/BoardsListViewModel";
 import {BoardsService} from "../services/BoardsService";
 import HTTP_CODES from "../HTTP_CODES";
-import {RequestWithJWT, RequestWithURIParam, RequestWithURIParamsAndBody} from "../../types/RequestTypes";
+import {RequestWithURIParam, RequestWithURIParamsAndBody} from "../../types/RequestTypes";
 import {GetBoardURIModel} from "../../types/models/Boards/Input/RequestModels/GetBoardURIModel";
 import {BoardViewModel} from "../../types/models/Boards/Output/ViewModels/BoardViewModel";
 import {CreatePostBodyModel} from "../../types/models/Boards/Input/RequestModels/CreatePostBodyModel";
@@ -12,7 +12,7 @@ import {GetPostURIModel} from "../../types/models/Boards/Input/RequestModels/Get
 import {CreateReplyBodyModel} from "../../types/models/Boards/Input/RequestModels/CreateReplyBodyModel";
 import {ReplyViewModel} from "../../types/models/Boards/Output/ViewModels/ReplyViewModel";
 import {ReplyServiceModelin} from "../../types/models/Boards/Input/ServiceModels/ReplyServiceModelIn";
-import {userInfo} from "node:os";
+import {GetReplyURIModel} from "../../types/models/Boards/Input/RequestModels/GetReplyURIModel";
 
 export const BoardsController = {
     async allBoardsGet(_req: Request,
@@ -122,6 +122,33 @@ export const BoardsController = {
         }
 
         res.status(HTTP_CODES.OK_200).json(deletedPost)
+    },
+
+    async deleteReply(req : Request<GetReplyURIModel>,
+                      res : Response<ReplyViewModel>){
+        const replyId : number = +req.params.replyId
+        const userId : number = +res.locals.id
+        const userRole : string = res.locals.role
+
+        if(!replyId || !userId){
+            res.status(HTTP_CODES.BAD_REQUEST_400).send()
+            return
+        }
+        if(!userRole){
+            res.status(HTTP_CODES.UNAUTHORIZED_401).send()
+        }
+        if(userRole == "REQUEST"){
+            res.status(HTTP_CODES.FORBIDDEN_403)
+        }
+
+        const deletedReply : ReplyViewModel | null = await BoardsService.DeleteReply(userId, replyId)
+
+        if (!deletedReply){
+            res.status(HTTP_CODES.NO_CONTENT_204).send()
+            return
+        }
+
+        res.status(HTTP_CODES.OK_200).json(deletedReply)
     }
 }
 

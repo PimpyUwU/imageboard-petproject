@@ -176,5 +176,30 @@ export const BoardsRepository = {
         catch (err){
             throw err
         }
+    },
+
+    async DeleteReply(userId : number, replyId : number) : Promise<ReplyORMModelOut | null>{
+        try{
+            const deletedReply : ReplyORMModelOut | null = await prisma.reply.delete({
+                where : {
+                    id : replyId
+                }
+            })
+
+            if(!deletedReply){
+                return null
+            }
+            prisma.deleted_replies.create({
+                data : {
+                    reply_id : deletedReply.id,
+                    admin_id : userId
+                }
+            })
+
+            return deletedReply
+        }
+        catch (err){
+            throw err
+        }
     }
 }
