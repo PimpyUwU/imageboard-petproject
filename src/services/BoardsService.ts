@@ -12,10 +12,10 @@ import {ReplyORMModelin} from "../../types/models/Boards/Input/ORM/ReplyORMModel
 import {ReplyORMModelOut} from "../../types/models/Boards/Output/ORM/ReplyORMModelOut";
 
 export const BoardsService = {
-    async GetAllBoards() : Promise<BoardsListViewModel[] | null> {
-        const boards : BoardORMModeOut[] | null = await BoardsRepository.GetAllBoards()
+    async GetAllBoards(): Promise<BoardsListViewModel[] | null> {
+        const boards: BoardORMModeOut[] | null = await BoardsRepository.GetAllBoards()
 
-        if(!boards || boards.length == 0){
+        if (!boards || boards.length == 0) {
             return null
         }
 
@@ -27,10 +27,10 @@ export const BoardsService = {
         });
     },
 
-    async GetBoardByTag(tag : string) : Promise<BoardViewModel | null>{
-        const board : BoardORMModeOut | null = await BoardsRepository.GetBoardByTag(tag)
+    async GetBoardByTag(tag: string): Promise<BoardViewModel | null> {
+        const board: BoardORMModeOut | null = await BoardsRepository.GetBoardByTag(tag)
 
-        if(!board){
+        if (!board) {
             return null
         }
 
@@ -61,113 +61,109 @@ export const BoardsService = {
         }
     },
 
-    async AddPost(postData : PostServiceModelIn) : Promise<PostViewModel | null>{
-        if(!await BoardsRepository.CheckIfBoardExists(postData.boardTag) || !postData.postTitle || !postData.postText) {
-            return null
-        }
-
+    async AddPost(postData: PostServiceModelIn): Promise<PostViewModel | null> {
         //map postData from PostServiceModel to PostORMModel (Input)
-        const post : PostORMModelIn = {
-            boardTag : postData.boardTag,
-            postTitle : postData.postTitle,
-            postText : postData.postText
+        const post: PostORMModelIn = {
+            boardTag: postData.boardTag,
+            postTitle: postData.postTitle,
+            postText: postData.postText
         }
 
-        const createdPost : PostORMModelOut | null = await BoardsRepository.AddPost(post)
+        const createdPost: PostORMModelOut | null = await BoardsRepository.AddPost(post)
 
-        if (!createdPost){
+        if (!createdPost) {
             return null
         }
 
         //Mapping PostORMModel to PostViewModel
         return {
-            id : createdPost.id,
-            title : createdPost.title,
-            text : createdPost.text,
-            creation_time : createdPost.creation_time,
-            reply : createdPost.reply
+            id: createdPost.id,
+            title: createdPost.title,
+            text: createdPost.text,
+            creation_time: createdPost.creation_time,
+            reply: createdPost.reply
         }
     },
 
-    async GetPost(boardTag : string, postId : number) : Promise<PostViewModel | null>{
-        if(postId && boardTag){
-            const foundPost : PostORMModelOut | null = await BoardsRepository.GetPost(boardTag, postId);
+    async GetPost(boardTag: string, postId: number): Promise<PostViewModel | null> {
+        if (postId && boardTag) {
+            const foundPost: PostORMModelOut | null = await BoardsRepository.GetPost(boardTag, postId);
 
-            if (!foundPost){
+            if (!foundPost) {
                 return null
             }
 
             //Mapping post ORM model to view model
             return {
-                id : foundPost.id,
-                title : foundPost.title,
-                text : foundPost.text,
-                creation_time : foundPost.creation_time,
-                reply : foundPost.reply
+                id: foundPost.id,
+                title: foundPost.title,
+                text: foundPost.text,
+                creation_time: foundPost.creation_time,
+                reply: foundPost.reply
             }
         }
         return null
     },
 
-    async AddReplyToPost(reply : ReplyServiceModelin) : Promise<ReplyViewModel | null>{
-        const replyData : ReplyORMModelin = {
-            replyTitle : reply.replyTitle,
-            replyText : reply.replyText,
-            replyId : reply.replyTo,
-            boardTag : reply.boardTag,
-            postId : reply.postId
+    async AddReplyToPost(reply: ReplyServiceModelin): Promise<ReplyViewModel | null> {
+        const replyData: ReplyORMModelin = {
+            replyTitle: reply.replyTitle,
+            replyText: reply.replyText,
+            replyId: reply.replyTo,
+            boardTag: reply.boardTag,
+            postId: reply.postId
         }
 
         if (!await BoardsRepository.GetPost(reply.boardTag, reply.postId))
             return null
 
-        const createdReply : ReplyORMModelOut | null =  await BoardsRepository.AddReplyToPost(replyData)
+        const createdReply: ReplyORMModelOut | null = await BoardsRepository.AddReplyToPost(replyData)
 
-        if(!createdReply){
+        if (!createdReply) {
             return null
         }
 
         //mapping ReplyORMModelOut to ReplyViewModel
         return {
-            id : createdReply.id,
-            title : createdReply.title,
-            text : createdReply.text,
-            creation_time : createdReply.creation_time,
-            reply_id : createdReply.reply_id,
-            post_id : createdReply.post_id
+            id: createdReply.id,
+            title: createdReply.title,
+            text: createdReply.text,
+            creation_time: createdReply.creation_time,
+            reply_id: createdReply.reply_id,
+            post_id: createdReply.post_id
         };
     },
 
-    async DeletePost(userId : number, postId : number) : Promise<PostViewModel | null>{
-        const post : PostORMModelOut | null = await BoardsRepository.DeletePost(userId, postId)
+    async DeletePost(userId: number, postId: number): Promise<PostViewModel | null> {
+        const post: PostORMModelOut | null = await BoardsRepository.DeletePost(userId, postId)
 
-        if(!post){
+        if (!post) {
             return null
         }
 
         //mapping post to view model
         return {
-            id : post.id,
-            title : post.title,
-            text : post.text,
-            creation_time : post.creation_time,
-            reply : post.reply
+            id: post.id,
+            title: post.title,
+            text: post.text,
+            creation_time: post.creation_time,
+            reply: post.reply
         }
     },
 
-    async DeleteReply(userId : number, replyId : number) : Promise<ReplyViewModel | null> {
-        const deletedReply : ReplyORMModelOut | null = await BoardsRepository.DeleteReply(userId, replyId)
+    async DeleteReply(userId: number, replyId: number): Promise<ReplyViewModel | null> {
+        const deletedReply: ReplyORMModelOut | null = await BoardsRepository.DeleteReply(userId, replyId)
 
-        if(!deletedReply)
+        if (!deletedReply)
             return null
 
         return {
-            id : deletedReply.id,
-            title : deletedReply.title,
-            text : deletedReply.text,
-            reply_id : deletedReply.reply_id,
-            post_id : deletedReply.post_id,
-            creation_time : deletedReply.creation_time
+            id: deletedReply.id,
+            title: deletedReply.title,
+            text: deletedReply.text,
+            reply_id: deletedReply.reply_id,
+            post_id: deletedReply.post_id,
+            creation_time: deletedReply.creation_time
         }
     }
 }

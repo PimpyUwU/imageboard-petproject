@@ -1,6 +1,6 @@
 import express from "express";
 import {AdminController} from "../controllers/AdminController";
-import {authorizationMiddleware} from "../middleware/AuthorizationMiddleware";
+import {AuthorizationMiddleware} from "../middleware/AuthorizationMiddleware";
 
 
 export const GetAdminRouter = () : express.Router => {
@@ -14,7 +14,7 @@ export const GetAdminRouter = () : express.Router => {
 
     router.post('/log-in', AdminController.logInPost)
 
-    router.get('/log-out', authorizationMiddleware.requireAuthorization, AdminController.logOut)
+    router.get('/log-out', AuthorizationMiddleware.requireAuthorization, AdminController.logOut)
 
     return router
 }

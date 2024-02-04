@@ -8,13 +8,13 @@ import {ReplyORMModelOut} from "../../types/models/Boards/Output/ORM/ReplyORMMod
 const prisma: PrismaClient = new PrismaClient()
 
 export const BoardsRepository = {
-    async GetAllBoards() : Promise<BoardORMModeOut[] | null> {
+    async GetAllBoards(): Promise<BoardORMModeOut[] | null> {
         return prisma.boards.findMany(
             {
-                include : {
-                    posts : {
-                        include : {
-                            reply : true
+                include: {
+                    posts: {
+                        include: {
+                            reply: true
                         }
                     }
                 },
@@ -22,31 +22,22 @@ export const BoardsRepository = {
         );
     },
 
-
-    async GetBoardByTag(tag: string) : Promise<BoardORMModeOut | null> {
+    async GetBoardByTag(tag: string): Promise<BoardORMModeOut | null> {
         return prisma.boards.findFirst({
-            where : {
+            where: {
                 tag: tag
             },
-            include : {
-                posts : {
-                    include : {
-                        reply : true
+            include: {
+                posts: {
+                    include: {
+                        reply: true
                     }
                 }
             }
         })
     },
 
-    async CheckIfBoardExists(tag : string) : Promise<boolean> {
-        return !!prisma.boards.findFirst({
-            where: {
-                tag: tag
-            }
-        })
-    },
-
-    async AddPost(post : PostORMModelIn): Promise<PostORMModelOut | null> {
+    async AddPost(post: PostORMModelIn): Promise<PostORMModelOut | null> {
         let board_id: number | null = null;
 
         const board = await prisma.boards.findFirst({
@@ -66,9 +57,9 @@ export const BoardsRepository = {
 
         return prisma.post.create({
             data: {
-                board_id : board_id,
-                title : post.postTitle,
-                text : post.postText
+                board_id: board_id,
+                title: post.postTitle,
+                text: post.postText
             },
             include: {
                 reply: true
@@ -76,14 +67,14 @@ export const BoardsRepository = {
         })
     },
 
-    async GetPost(boardTag : string, postId : number) : Promise<PostORMModelOut | null>{
+    async GetPost(boardTag: string, postId: number): Promise<PostORMModelOut | null> {
         return prisma.post.findFirst({
             where: {
                 id: postId,
                 board: {
                     tag: boardTag
                 },
-                is_deleted : false
+                is_deleted: false
             },
             include: {
                 reply: true
@@ -91,7 +82,7 @@ export const BoardsRepository = {
         });
     },
 
-    async AddReplyToPost(reply : ReplyORMModelin) : Promise<ReplyORMModelOut | null> {
+    async AddReplyToPost(reply: ReplyORMModelin): Promise<ReplyORMModelOut | null> {
         return prisma.reply.create({
             data: {
                 title: reply.replyTitle,
@@ -102,7 +93,7 @@ export const BoardsRepository = {
         });
     },
 
-    async DeletePost(userId : number, postId : number) : Promise<PostORMModelOut | null> {
+    async DeletePost(userId: number, postId: number): Promise<PostORMModelOut | null> {
         try {
             const post: PostORMModelOut | null = await prisma.post.update({
                 data: {
@@ -116,16 +107,16 @@ export const BoardsRepository = {
                 }
             })
 
-            if (!post){
+            if (!post) {
                 return null
             }
 
-            const replyIDs : {id : number}[] = await prisma.reply.findMany({
-                where : {
-                    post_id : postId
+            const replyIDs: { id: number }[] = await prisma.reply.findMany({
+                where: {
+                    post_id: postId
                 },
-                select : {
-                    id : true
+                select: {
+                    id: true
                 }
             })
 
@@ -134,7 +125,7 @@ export const BoardsRepository = {
                 replyIDs.map((reply) => {
                         return prisma.reply.update({
                             where: {
-                                id : reply.id
+                                id: reply.id
                             },
                             data: {
                                 is_deleted: true
@@ -147,58 +138,55 @@ export const BoardsRepository = {
                 )
             );
 
-            const data: {reply_id : number, admin_id : number}[] = []
+            const data: { reply_id: number, admin_id: number }[] = []
             //moving data to input ORM object
-            for(let i = 0 ; i < replyIDs.length; i++){
+            for (let i = 0; i < replyIDs.length; i++) {
                 data.push({
-                    reply_id : replyIDs[i].id,
-                    admin_id : userId
+                    reply_id: replyIDs[i].id,
+                    admin_id: userId
                 })
             }
 
             prisma.deleted_posts.create({
-                data : {
-                    admin_id : userId,
-                    post_id : postId
+                data: {
+                    admin_id: userId,
+                    post_id: postId
                 }
             })
 
-            if(replyIDs.length != 0){
+            if (replyIDs.length != 0) {
                 prisma.deleted_replies.createMany({
-                        data : data
+                    data: data
                 })
             }
 
 
-
             return post
-        }
-        catch (err){
+        } catch (err) {
             throw err
         }
     },
 
-    async DeleteReply(userId : number, replyId : number) : Promise<ReplyORMModelOut | null>{
-        try{
-            const deletedReply : ReplyORMModelOut | null = await prisma.reply.delete({
-                where : {
-                    id : replyId
+    async DeleteReply(userId: number, replyId: number): Promise<ReplyORMModelOut | null> {
+        try {
+            const deletedReply: ReplyORMModelOut | null = await prisma.reply.delete({
+                where: {
+                    id: replyId
                 }
             })
 
-            if(!deletedReply){
+            if (!deletedReply) {
                 return null
             }
             prisma.deleted_replies.create({
-                data : {
-                    reply_id : deletedReply.id,
-                    admin_id : userId
+                data: {
+                    reply_id: deletedReply.id,
+                    admin_id: userId
                 }
             })
 
             return deletedReply
-        }
-        catch (err){
+        } catch (err) {
             throw err
         }
     }
